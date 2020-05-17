@@ -137,7 +137,28 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
 
     @Override
     public void remove(E x) throws ElementNotFoundException {
-        // TODO:
+    	int index = -1;
+    	if(this.isEmpty()) {
+    		throw new ElementNotFoundException(x);
+    	}
+    	try {
+    		for(int i=0; i<this.size(); i++) {
+    			if(this.array.get(i).equals(x)) {
+	        		 index = i;
+    			}
+    		}
+    	} catch(EmptyPriorityQueueException e) {
+    	  index = -1 ;
+    	}
+
+    	if(index < 0) {
+    	  throw new ElementNotFoundException(x) ;
+    	}
+
+    	E lastItem = this.array.get(--this.currentSize) ;
+    	this.arraySet(index, lastItem) ;
+    	this.percolateUp(index) ;
+    	this.percolateDown(index) ;
     }
 
     @Override
@@ -201,5 +222,38 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
     public String toString() {
         return BinaryHeapFormatter.toStringTree(this, 8);
     }
+    
+    public boolean isValid() {
+    	if (this.currentSize < 1) {
+    		return true;
+    	}
+    	return isValid(0);
+    }
 
+   public boolean isValid(int index) {
+    	boolean valid = true;
+    	int indexLeft = this.indexLeft(index);
+    	int indexRight = indexLeft + 1;
+    	E current = this.array.get(0);
+    	if (this.currentSize < index) {
+    		return valid;
+    	}
+    	if (indexLeft<this.currentSize) {
+    		if(current.compareTo(this.array.get(indexLeft))<0) {
+    			return isValid(indexLeft);
+    		}else {
+    			valid = false;
+    		}
+    	}
+    	
+    	if (indexRight<this.currentSize) {
+    		if(current.compareTo(this.array.get(indexRight))<0) {
+    			return isValid(indexRight);
+    		}else {
+    			valid = false;
+    		}
+    	}
+    	return valid;
+    }
+    
 }
