@@ -9,7 +9,7 @@ public class AStarAlgorithm extends DijkstraAlgorithm {
         super(data);
     }
 
-    protected ShortestPathSolution doRun() {
+    public ShortestPathSolution doRun() {
         final ShortestPathData data = getInputData();
         Graph graph = data.getGraph();
         

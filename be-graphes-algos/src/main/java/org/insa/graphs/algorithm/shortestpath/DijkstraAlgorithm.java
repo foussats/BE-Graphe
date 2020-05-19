@@ -21,7 +21,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
     }
 
     @Override
-    protected ShortestPathSolution doRun() {
+	public ShortestPathSolution doRun() {
         final ShortestPathData data = getInputData();
         Graph graph = data.getGraph();
         
@@ -74,7 +74,8 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         ShortestPathSolution solution;
         
         if (labels[destination].getPere() == null) {
-            solution = new ShortestPathSolution(data, Status.INFEASIBLE);
+        	Node nodeNull = null;
+            solution = new ShortestPathSolution(data, Status.INFEASIBLE, new Path(data.getGraph(), nodeNull));
         }
         else {
 
