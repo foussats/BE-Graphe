@@ -253,59 +253,31 @@ public class Path {
      * @return true if the path is valid, false otherwise.
      * 
      */
-   /* public boolean isValid() {
-        boolean valid = false;
-        boolean valid2 = true;
+   public boolean isValid() {
         int cpt = 0;
-        List<Arc> list = getArcs();
+        List<Arc> list = this.getArcs();
         if (this.isEmpty()){
-        	valid = true;
+        	return true;
         }
-        else if (this.size() == 1){
-        	valid = true;
+        else if (this.getLength() == 0.0){
+        	return true;
         }
         else if (((list.get(0).getOrigin()).equals(this.getOrigin()))){
-        	while (cpt<(list.size()-1) && (valid2==true)){
+        	while (cpt<(list.size()-1)){
             	cpt++;
             	Arc arc1 = list.get(cpt-1);
             	Arc arc2 = list.get(cpt);
             	
             	if (!(arc2.getOrigin().equals(arc1.getDestination()))){
-            		valid2 = false;
+            		return false;
             	}
-            	valid = valid2;
-        	}
-        }
-        
-        return valid;
-    }	
-*/
-    
-    public boolean isValid() {
-        if (this.isEmpty()) {
-        	return true;
-        }else if(this.getLength()==0.0) {
-        	return true;
-        }
-        Node premier_Arc_origine = this.getArcs().get(0).getOrigin();
-    	List<Arc> liste = this.getArcs();
-        if(premier_Arc_origine.equals(this.getOrigin())) {
-        	int cpt =0;
-        	liste.get(cpt);
-        	Arc arc1;
-        	Arc arc2;
-        	while((cpt+1)<liste.size()) {
-        		arc1 = liste.get(cpt);
-        		arc2 = liste.get(cpt+1);
-        		if(!(arc1.getDestination().equals(arc2.getOrigin()))) {
-        			return false;
-        		}
-        		cpt++;
         	}
         	return true;
         }
         return false;
-    }
+    }	
+
+    
     /**
      * Compute the length of this path (in meters).
      * 
