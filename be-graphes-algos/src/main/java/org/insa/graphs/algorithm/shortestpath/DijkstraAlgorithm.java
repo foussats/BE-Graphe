@@ -1,6 +1,7 @@
 package org.insa.graphs.algorithm.shortestpath;
 
 import java.util.Arrays;
+import java.lang.*;
 import java.util.Collections;
 
 
@@ -49,61 +50,75 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
      // Notify observers about the first event (origin processed).
         notifyOriginProcessed(data.getOrigin());
         
+        
         int cpt = 0;
-        while (!tas.isEmpty() && labels[destination].inconnu()) {
-        	cpt++;
-        	Label x = tas.deleteMin();
-        	x.setConnu(true);
-        	Node node = graph.getNodes().get(x.sommetCourant());
-        	notifyNodeMarked(node);
-        	int nbSuc = 0;
-        	for (Arc arc : node.getSuccessors()) {
-        		
-        		int numLabel = arc.getDestination().getId();
-        		if(labels[numLabel].inconnu() && data.isAllowed(arc)) {
-        			update(tas, labels[numLabel], x, arc, data);  
-        			
-        		}
-        		System.out.println("Cout label : " + labels[numLabel].getCost()+"\n");	
-        		nbSuc++;
-        		System.out.println("Nombre successeurs explorés depuis la node " + node.getId()+ " : " +  nbSuc + "\n");
-        		System.out.println("Le tas : est valide : " + tas.isValid());
-        	}
-        	System.out.println("Nombre successeurs théoriques de la node " + node.getId() + " : " + node.getNumberOfSuccessors());
+        int nbSommetsVisites = 0;
+        long tpsDeb = System.currentTimeMillis();
+        if(sommet != destination) {
+	        	
+	        while (!tas.isEmpty() && labels[destination].inconnu()) {
+	        	cpt++;
+	        	Label x = tas.deleteMin();
+	        	x.setConnu(true);
+	        	Node node = graph.getNodes().get(x.sommetCourant());
+	        	notifyNodeMarked(node);
+	        	int nbSuc = 0;
+	        	for (Arc arc : node.getSuccessors()) {
+	        		
+	        		int numLabel = arc.getDestination().getId();
+	        		if(labels[numLabel].inconnu() && data.isAllowed(arc)) {
+	        			update(tas, labels[numLabel], x, arc, data);	        			
+	        		}
+	        		System.out.println("Cout label : " + labels[numLabel].getCost()+"\n");	
+	        		nbSuc++;
+	        		System.out.println("Nombre successeurs explorés depuis la node " + node.getId()+ " : " +  nbSuc + "\n");
+	        		System.out.println("Le tas : est valide : " + tas.isValid());
+	        		nbSommetsVisites ++;
+	        	}
+	        	System.out.println("Nombre successeurs théoriques de la node " + node.getId() + " : " + node.getNumberOfSuccessors());
+	        }
+	        ShortestPathSolution solution;
+	        System.out.println("Nombre de sommets visités : " + nbSommetsVisites + "\n");
+	        System.out.println("Nombre d'éléments dans le tas : " +tas.size()+ "\n");
+	        if (labels[destination].getPere() == null) {
+	        	Node nodeNull = null;
+	            solution = new ShortestPathSolution(data, Status.INFEASIBLE, new Path(data.getGraph(), nodeNull));
+	        }
+	        else {	        	
+	            // The destination has been found, notify the observers.
+	            notifyDestinationReached(data.getDestination());
+	
+	            // Create the path from the array of predecessors...
+	            ArrayList<Arc> arcs = new ArrayList<>();
+	            Arc arc = labels[destination].getPere();
+	            while (arc != null) {
+	                arcs.add(arc);
+	                arc = labels[arc.getOrigin().getId()].getPere();
+	            }
+	
+	            // Reverse the path...
+	            Collections.reverse(arcs);
+	
+	            // Create the final solution.
+	            solution = new ShortestPathSolution(data, Status.OPTIMAL, new Path(graph, arcs));
+	        }
+	        
+	        // Verify the path is valid
+	        if (solution.getPath().isValid()){
+	        	System.out.println("Le Path est valide\n");
+	        }
+	        
+	        long tpsExec = System.currentTimeMillis() - tpsDeb;
+	        System.out.println("Temps d'exécution : " + tpsExec + "\n");
+	        return solution; 
+        }else {
+        	Node nodeN = data.getOrigin();
+        	Path p = new Path(graph, nodeN);
+        	
+        	ShortestPathSolution solution = new ShortestPathSolution(data, Status.OPTIMAL, p);
+        	return solution;
         }
-        ShortestPathSolution solution;
         
-        if (labels[destination].getPere() == null) {
-        	Node nodeNull = null;
-            solution = new ShortestPathSolution(data, Status.INFEASIBLE, new Path(data.getGraph(), nodeNull));
-        }
-        else {
-
-            // The destination has been found, notify the observers.
-            notifyDestinationReached(data.getDestination());
-
-            // Create the path from the array of predecessors...
-            ArrayList<Arc> arcs = new ArrayList<>();
-            Arc arc = labels[destination].getPere();
-            while (arc != null) {
-                arcs.add(arc);
-                arc = labels[arc.getOrigin().getId()].getPere();
-            }
-
-            // Reverse the path...
-            Collections.reverse(arcs);
-
-            // Create the final solution.
-            solution = new ShortestPathSolution(data, Status.OPTIMAL, new Path(graph, arcs));
-        }
-        
-        // Verify the path is valid
-        if (solution.getPath().isValid()){
-        	System.out.println("Le Path est valide\n");
-        }
-
-        
-        return solution;
         
     }
 

@@ -15,7 +15,7 @@ public class AStarAlgorithm extends DijkstraAlgorithm {
         
         int nbNodes = graph.size();
         // Initialize array of labels.
-        Label[] labels = new Label[nbNodes];
+        Label[] labels = new LabelStar[nbNodes];
         for (int i = 0; i<nbNodes; i++) {
         	if (this.data.getMode() == AbstractInputData.Mode.TIME) {
         		int vitesse_graph_max = graph.getGraphInformation().getMaximumSpeed();

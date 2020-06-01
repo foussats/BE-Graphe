@@ -1,4 +1,4 @@
-package org.insa.graphs.model;
+ package org.insa.graphs.model;
 
 import java.util.List;
 
