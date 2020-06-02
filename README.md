@@ -14,4 +14,4 @@ Java, développé sur Eclipse.
 * __Etape 2 :__ Vérification des chemins --> FAIT 
 * __Etapes 3 et 4 :__  Plus court chemin, Dijkstra --> FAIT 
 * __Etape 5 :__ Plus court chemin, A* --> FAIT
-* __Etape 6 :__ Optimalité des solutions obtenues	--> En cours, preque terminé
+* __Etape 6 :__ Optimalité des solutions obtenues	--> FAIT
